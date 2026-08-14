@@ -24,6 +24,11 @@ const state = {
   hi: null,
   tip: null,
   styleEl: null,
+  /* True while background.js is mid-capture. Page.captureScreenshot
+     photographs the real DOM, including this overlay — without this flag
+     a live hover highlight or an existing pin bakes straight into every
+     device screenshot, which is exactly what happened before this fix. */
+  hiddenForCapture: false,
 };
 
 /* ── Overlay chrome ─────────────────────────────────────────── */
@@ -170,6 +175,28 @@ function docRect(el) {
 
 /* ── Interaction ────────────────────────────────────────────── */
 
+/**
+ * Suppress every visible trace of the tagger for the duration of a
+ * device capture pass. Tagging stays armed underneath — clicks are
+ * still ignored by the page and a click still tags — this only hides
+ * what a screenshot would otherwise photograph.
+ */
+function hideForCapture() {
+  state.hiddenForCapture = true;
+  if (state.hi) state.hi.style.display = 'none';
+  if (state.tip) state.tip.style.display = 'none';
+  state.pins.forEach((p) => { p.dataset.pdWasVisible = p.style.display !== 'none' ? '1' : ''; p.style.display = 'none'; });
+}
+function showAfterCapture() {
+  state.hiddenForCapture = false;
+  state.pins.forEach((p) => {
+    if (p.dataset.pdWasVisible) p.style.display = '';
+    delete p.dataset.pdWasVisible;
+  });
+  /* hi/tip stay hidden until the next real mousemove repositions them —
+     showing a highlight with no cursor over it would be a stale one. */
+}
+
 function isOurs(el) {
   return el && el.classList && (
     el.classList.contains(`${NS}-hi`) ||
@@ -179,7 +206,7 @@ function isOurs(el) {
 }
 
 function onMove(e) {
-  if (!state.armed) return;
+  if (!state.armed || state.hiddenForCapture) return;
   const el = e.target;
   if (!el || el.nodeType !== 1 || isOurs(el)) return;
 
@@ -277,6 +304,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (!msg || !msg.type) return;
   if (msg.type === 'PD_ARM') { arm(msg.startAt); sendResponse({ ok: true }); }
   if (msg.type === 'PD_DISARM') { disarm(); sendResponse({ ok: true }); }
+  if (msg.type === 'PD_HIDE_OVERLAY') { hideForCapture(); sendResponse({ ok: true }); }
+  if (msg.type === 'PD_SHOW_OVERLAY') { showAfterCapture(); sendResponse({ ok: true }); }
   if (msg.type === 'PD_CLEAR_PINS') {
     state.pins.forEach((p) => p.remove());
     state.pins = []; state.seq = 0;

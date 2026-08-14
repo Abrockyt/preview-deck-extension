@@ -123,11 +123,29 @@ async function shoot(tabId, windowId) {
   return await chrome.tabs.captureVisibleTab(windowId, { format: 'png' });
 }
 
+/**
+ * Best-effort message to the content script, which may not be injected
+ * at all — tagging is opt-in, so a tab that has never been tagged on has
+ * nothing listening. Both directions of this are fire-and-forget: a
+ * missing listener throws "Receiving end does not exist", which is the
+ * expected, silent case here, not a failure worth surfacing.
+ */
+async function tellTagger(tabId, type) {
+  try { await chrome.tabs.sendMessage(tabId, { type }); } catch (e) {}
+}
+
 async function captureAll(tabId, windowId, devices, onProgress) {
   const results = [];
   await attach(tabId);
   try {
     await sendCommand(tabId, 'Page.enable');
+
+    /* Page.captureScreenshot photographs the real DOM. If tagging has ever
+       been armed on this tab, its hover highlight, tooltip and pins are
+       part of that DOM — visible to the user, and just as visible to the
+       screenshot — so they are hidden for the whole capture pass and
+       restored once every device size is done. */
+    await tellTagger(tabId, 'PD_HIDE_OVERLAY');
 
     for (let i = 0; i < devices.length; i++) {
       const d = devices[i];
@@ -152,7 +170,10 @@ async function captureAll(tabId, windowId, devices, onProgress) {
     }
   } finally {
     /* finally, not after the loop: a throw halfway through must still
-       hand the tab back. */
+       hand the tab back — and must still give the tagger its overlay
+       back, or a failed capture would leave pins invisible until the
+       user manually re-arms tagging. */
+    await tellTagger(tabId, 'PD_SHOW_OVERLAY');
     await release(tabId);
   }
   return results;
