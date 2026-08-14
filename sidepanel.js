@@ -75,9 +75,16 @@ function renderShots(pending) {
     const card = document.createElement('div');
     card.className = 'shot' + (c.status === 'capturing' ? ' pending' : '');
 
+    /* Set from THIS device's real dimensions, not a fixed box — a phone
+       capture is portrait and a desktop capture is landscape, and forcing
+       both into the same shape is what stopped these looking like real
+       device screenshots in the first place. */
+    const ratio = `${c.width} / ${c.height}`;
+
     if (c.screenshot) {
       const b = document.createElement('button');
       b.className = 'frame';
+      b.style.aspectRatio = ratio;
       b.title = 'View full size';
       const img = document.createElement('img');
       img.src = c.screenshot;
@@ -88,6 +95,7 @@ function renderShots(pending) {
     } else {
       const d = document.createElement('div');
       d.className = 'frame';
+      d.style.aspectRatio = ratio;
       card.appendChild(d);
     }
 
