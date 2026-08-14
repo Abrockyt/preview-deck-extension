@@ -1,0 +1,65 @@
+{
+  "manifest_version": 3,
+  "name": "Preview Deck",
+  "version": "1.0.0",
+  "description": "Tag elements on your localhost dev page with their React source file:line and export Markdown for AI agents.",
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "preview-deck@localhost-tools",
+      "strict_min_version": "115.0"
+    }
+  },
+
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "tabs"
+  ],
+
+  "host_permissions": [
+    "http://localhost/*",
+    "http://127.0.0.1/*"
+  ],
+
+  "background": {
+    "scripts": ["background.js"]
+  },
+
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Preview Deck",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+
+  "sidebar_action": {
+    "default_panel": "sidebar.html",
+    "default_title": "Preview Deck",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+
+  "commands": {
+    "toggle-tagging": {
+      "suggested_key": { "default": "Alt+Shift+A" },
+      "description": "Arm or disarm element tagging on the active tab"
+    }
+  }
+}

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Preview Deck</title>
+<link rel="stylesheet" href="sidepanel.css" />
+</head>
+<body>
+
+<div class="app">
+  <header class="top">
+    <i class="mark" aria-hidden="true"></i>
+    <h1>Preview Deck</h1>
+    <span class="host" id="host">—</span>
+  </header>
+
+  <div class="actions">
+    <button class="btn primary wide" id="captureBtn">Capture all device sizes</button>
+    <button class="btn" id="tagBtn" aria-pressed="false">Tag element <kbd>⌥⇧A</kbd></button>
+    <button class="btn quiet" id="clearBtn">Clear</button>
+  </div>
+
+  <div class="scroll" id="scroll">
+    <div id="error" class="err" hidden></div>
+
+    <section class="sec">
+      <div class="sec-h">
+        <h2>Captures</h2>
+        <span class="pill" id="shotCount">0</span>
+        <span class="spacer"></span>
+      </div>
+      <div id="shots" class="shots"></div>
+      <div id="shotsEmpty" class="empty">
+        No captures yet.<br />Open a <b>localhost</b> tab and hit
+        <b>Capture all device sizes</b>.
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="sec-h">
+        <h2>Tags</h2>
+        <span class="pill" id="tagCount">0</span>
+        <span class="spacer"></span>
+      </div>
+      <div id="tags"></div>
+      <div id="tagsEmpty" class="empty">
+        No tags yet.<br />Hit <b>Tag element</b>, then click anything on the page.
+      </div>
+    </section>
+  </div>
+
+  <footer class="foot">
+    <button class="btn primary" id="copyBtn">Copy feedback</button>
+    <button class="btn quiet" id="reloadBtn" title="Re-read the active tab">↻</button>
+  </footer>
+</div>
+
+<div class="lb" id="lightbox" hidden>
+  <div class="lb-bar">
+    <b id="lbLabel"></b><span id="lbDims"></span>
+    <button class="lb-close" id="lbClose">Close</button>
+  </div>
+  <img id="lbImg" alt="" />
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="sidepanel.js"></script>
+</body>
+</html>

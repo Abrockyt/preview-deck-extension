@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Preview Deck</title>
+<link rel="stylesheet" href="sidebar.css" />
+</head>
+<body>
+
+<div class="app">
+  <header class="top">
+    <i class="mark" aria-hidden="true"></i>
+    <h1>Preview Deck</h1>
+    <span class="host" id="host">—</span>
+  </header>
+
+  <div class="actions">
+    <button class="btn primary" id="tagBtn" aria-pressed="false">Tag element <kbd>⌥⇧A</kbd></button>
+    <button class="btn quiet" id="clearBtn">Clear</button>
+  </div>
+
+  <div class="scroll" id="scroll">
+    <div id="error" class="err" hidden></div>
+
+    <div class="notice">
+      <b>Firefox build:</b> device screenshots aren't available here — Firefox
+      extensions have no API to emulate a viewport size or capture one, unlike
+      Chrome/Edge's debugger protocol. Tagging, source file:line and Markdown
+      export all work the same.
+    </div>
+
+    <section class="sec">
+      <div class="sec-h">
+        <h2>Tags</h2>
+        <span class="pill" id="tagCount">0</span>
+      </div>
+      <div id="tags"></div>
+      <div id="tagsEmpty" class="empty">
+        No tags yet.<br />Hit <b>Tag element</b>, then click anything on the page.
+      </div>
+    </section>
+  </div>
+
+  <footer class="foot">
+    <button class="btn primary" id="copyBtn">Copy feedback</button>
+    <button class="btn quiet" id="reloadBtn" title="Re-read the active tab">↻</button>
+  </footer>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="sidebar.js"></script>
+</body>
+</html>

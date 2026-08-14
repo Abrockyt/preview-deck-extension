@@ -1,0 +1,55 @@
+{
+  "manifest_version": 3,
+  "name": "Preview Deck",
+  "version": "1.0.0",
+  "description": "Capture your localhost dev page at 6 device sizes, tag elements with their React source file:line, export Markdown for AI agents.",
+
+  "minimum_chrome_version": "116",
+
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+
+  "permissions": [
+    "debugger",
+    "activeTab",
+    "scripting",
+    "storage",
+    "tabs",
+    "sidePanel"
+  ],
+
+  "host_permissions": [
+    "http://localhost/*",
+    "http://127.0.0.1/*"
+  ],
+
+  "background": {
+    "service_worker": "background.js"
+  },
+
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Preview Deck",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+
+  "commands": {
+    "toggle-tagging": {
+      "suggested_key": { "default": "Alt+Shift+A" },
+      "description": "Arm or disarm element tagging on the active tab"
+    }
+  }
+}
